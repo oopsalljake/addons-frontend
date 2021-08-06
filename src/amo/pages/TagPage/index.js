@@ -48,6 +48,7 @@ export class TagPageBase extends React.Component<InternalProps> {
     const { filters, match } = this.props;
     const { tag } = match.params;
 
+    // filters doesn't contain tag because we delete it in components/SearchFilters
     const filtersForSearch = {
       ...filters,
       tag,
