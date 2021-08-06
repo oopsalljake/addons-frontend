@@ -7,7 +7,6 @@ import HeadLinks from 'amo/components/HeadLinks';
 import Page from 'amo/components/Page';
 import Search from 'amo/components/Search';
 import { DEFAULT_TAG_SORT } from 'amo/constants';
-import { withFixedErrorHandler } from 'amo/errorHandler';
 import translate from 'amo/i18n/translate';
 import {
   convertFiltersToQueryParams,
@@ -80,14 +79,9 @@ const mapStateToProps = (state: AppState): PropsFromState => {
   };
 };
 
-export const extractId = (ownProps: Props): string => {
-  return ownProps.match.params.tag;
-};
-
 const TagPage: React.ComponentType<Props> = compose(
   connect(mapStateToProps),
   translate(),
-  withFixedErrorHandler({ fileName: __filename, extractId }),
 )(TagPageBase);
 
 export default TagPage;
