@@ -65,6 +65,21 @@ describe(__filename, () => {
           /-1 is not allowed/,
         );
       });
+
+      it('does not allow a negative fixed page count', () => {
+        expect(() => renderPaginate({ fixedPageCount: -1 })).toThrowError(
+          /-1 is not allowed/,
+        );
+      });
+
+      it('uses fixedPageCount when a value is provided', () => {
+        const root = renderPaginate({
+          count: 1000,
+          fixedPageCount: 5,
+          perPage: 5,
+        });
+        expect(root.instance().pageCount()).toEqual(5);
+      });
     });
 
     describe('visiblePages()', () => {

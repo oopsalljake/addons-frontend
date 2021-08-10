@@ -39,6 +39,7 @@ describe(__filename, () => {
       const newState = search(state, abortSearch());
       expect(newState.filters).toEqual({ query: 'foo' });
       expect(newState.loading).toBe(false);
+      expect(newState.pageCount).toEqual(0);
       expect(newState.results).toEqual([]);
       expect(newState.count).toEqual(0);
     });
@@ -55,6 +56,7 @@ describe(__filename, () => {
       );
       expect(state.filters).toEqual({ query: 'foo' });
       expect(state.loading).toBe(true);
+      expect(state.pageCount).toEqual(0);
       expect(state.results).toEqual([]);
       expect(state.count).toEqual(0);
     });
@@ -69,6 +71,7 @@ describe(__filename, () => {
         { ...fakeAddon, slug: 'foo' },
         { ...fakeAddon, slug: 'food' },
       ],
+      pageCount: 1,
       pageSize: 25,
     };
 
@@ -88,6 +91,7 @@ describe(__filename, () => {
     it('sets the results', () => {
       const state = search(stateWithLang, searchLoad(response));
 
+      expect(state.pageCount).toBe(1);
       expect(state.results).toEqual(
         response.results.map((addon) => createInternalAddonWithLang(addon)),
       );

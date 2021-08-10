@@ -19,6 +19,7 @@ type Props = {|
   LinkComponent: React.Node,
   count: number,
   currentPage?: string,
+  fixedPageCount?: number,
   pathname?: string,
   perPage: number,
   queryParams?: Object,
@@ -56,7 +57,17 @@ export class PaginateBase extends React.Component<InternalProps> {
   }
 
   pageCount(): number {
-    const { count, perPage } = this.props;
+    const { count, fixedPageCount, perPage } = this.props;
+
+    // If fixedPageCount is provided we don't need to compute the page count.
+    if (typeof fixedPageCount === 'number') {
+      invariant(
+        fixedPageCount >= 0,
+        `A fixedPageCount value of ${fixedPageCount} is not allowed`,
+      );
+
+      return fixedPageCount;
+    }
 
     invariant(typeof perPage === 'number', 'perPage is required');
 

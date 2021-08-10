@@ -592,6 +592,7 @@ export function dispatchSearchResults({
     searchLoad({
       count: Object.keys(addons).length,
       results: addons,
+      pageCount: 1000,
       pageSize: coreApi.DEFAULT_API_PAGE_SIZE,
     }),
   );

@@ -20,6 +20,7 @@ export type SearchState = {|
   filters: SearchFilters | null,
   lang: string,
   loading: boolean,
+  pageCount: number,
   pageSize: string | null,
   results: Array<AddonType | CollectionAddonType>,
 |};
@@ -31,6 +32,7 @@ export const initialState: SearchState = {
   // code, and protect against a lang of '' in selectLocalizedContent.
   lang: '',
   loading: false,
+  pageCount: 0,
   pageSize: null,
   results: [],
 };
@@ -68,6 +70,7 @@ export function searchStart({
 
 type SearchLoadParams = {|
   count: number,
+  pageCount: number,
   pageSize: string,
   results: Array<ExternalAddonType>,
 |};
@@ -79,6 +82,7 @@ type SearchLoadAction = {|
 
 export function searchLoad({
   count,
+  pageCount,
   pageSize,
   results,
 }: SearchLoadParams): SearchLoadAction {
@@ -86,7 +90,7 @@ export function searchLoad({
 
   return {
     type: SEARCH_LOADED,
-    payload: { count, pageSize, results },
+    payload: { count, pageCount, pageSize, results },
   };
 }
 
@@ -111,6 +115,7 @@ export default function search(
         count: 0,
         filters: payload.filters,
         loading: true,
+        pageCount: 0,
         results: [],
       };
     }
@@ -121,6 +126,7 @@ export default function search(
         ...state,
         count: payload.count,
         loading: false,
+        pageCount: payload.pageCount,
         pageSize: payload.pageSize,
         results: payload.results.map((addon) =>
           createInternalAddon(addon, state.lang),
@@ -132,6 +138,7 @@ export default function search(
         ...state,
         count: 0,
         loading: false,
+        pageCount: 0,
         results: [],
       };
     default:

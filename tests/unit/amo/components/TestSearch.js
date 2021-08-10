@@ -60,6 +60,7 @@ describe(__filename, () => {
       handleSearch: sinon.spy(),
       i18n: fakeI18n(),
       loading: false,
+      fixedPageCount: 1000,
       pageSize: String(DEFAULT_API_PAGE_SIZE),
       results: [
         { name: 'Foo', slug: 'foo' },
@@ -99,6 +100,7 @@ describe(__filename, () => {
     expect(paginator.instance()).toBeInstanceOf(Paginate);
     expect(paginator.prop('count')).toEqual(count);
     expect(paginator.prop('currentPage')).toEqual(3);
+    expect(paginator.prop('fixedPageCount')).toEqual(1000);
     expect(paginator.prop('pathname')).toEqual('/search/');
     expect(paginator.prop('perPage')).toEqual(DEFAULT_API_PAGE_SIZE);
     expect(paginator.prop('queryParams')).toEqual({ page: 3, q: 'foo' });
