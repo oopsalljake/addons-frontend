@@ -26,6 +26,9 @@ import type { ReactRouterLocationType } from 'amo/types/router';
 const API_BASE = `${config.get('apiHost')}${config.get('apiPath')}`;
 
 export const DEFAULT_API_PAGE_SIZE = 25;
+// This corresponds to the ES_MAX_RESULT_WINDOW setting on the server and is
+// used to limit pagination.
+export const MAX_API_RESULT_COUNT = 25000;
 export const REGION_CODE_HEADER = 'X-Country-Code';
 
 export function makeQueryString(query: {

@@ -3,6 +3,7 @@ import invariant from 'invariant';
 import * as React from 'react';
 import { compose } from 'redux';
 
+import { MAX_API_RESULT_COUNT } from 'amo/api';
 import PaginatorLink from 'amo/components/PaginatorLink';
 import translate from 'amo/i18n/translate';
 import type { I18nType } from 'amo/types/i18n';
@@ -64,7 +65,9 @@ export class PaginateBase extends React.Component<InternalProps> {
       throw new TypeError(`A perPage value of ${perPage} is not allowed`);
     }
 
-    return Math.ceil(count / perPage);
+    const countForPagination = Math.min(count, MAX_API_RESULT_COUNT);
+
+    return Math.ceil(countForPagination / perPage);
   }
 
   visiblePages({ pageCount }: {| pageCount: number |}): Array<number> {
