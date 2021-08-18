@@ -1,5 +1,4 @@
 /* @flow */
-import invariant from 'invariant';
 import * as React from 'react';
 import { compose } from 'redux';
 
@@ -19,6 +18,7 @@ type Props = {|
   LinkComponent: React.Node,
   count: number,
   currentPage?: string,
+  pageCount: number,
   pathname?: string,
   perPage: number,
   queryParams?: Object,
@@ -55,20 +55,8 @@ export class PaginateBase extends React.Component<InternalProps> {
     return Number.isNaN(currentPage) || currentPage < 1 ? 1 : currentPage;
   }
 
-  pageCount(): number {
-    const { count, perPage } = this.props;
-
-    invariant(typeof perPage === 'number', 'perPage is required');
-
-    if (perPage <= 0) {
-      throw new TypeError(`A perPage value of ${perPage} is not allowed`);
-    }
-
-    return Math.ceil(count / perPage);
-  }
-
-  visiblePages({ pageCount }: {| pageCount: number |}): Array<number> {
-    const { showPages } = this.props;
+  visiblePages(): Array<number> {
+    const { pageCount, showPages } = this.props;
     if (!showPages) {
       return [];
     }
@@ -99,19 +87,18 @@ export class PaginateBase extends React.Component<InternalProps> {
   }
 
   render(): null | React.Node {
-    const { LinkComponent, count, i18n, pageParam, pathname, queryParams } =
+    const { LinkComponent, i18n, pageCount, pageParam, pathname, queryParams } =
       this.props;
 
-    const pageCount = this.pageCount();
     const currentPage = this.getCurrentPage();
 
-    if (count === undefined) {
-      throw new Error('The count property cannot be undefined');
-    }
     if (pathname === undefined) {
       throw new Error('The pathname property cannot be undefined');
     }
-    if (this.pageCount() === 1) {
+    if (pageCount === undefined) {
+      throw new Error('The pageCount property cannot be undefined');
+    }
+    if (pageCount === 1) {
       return null;
     }
 
@@ -135,7 +122,7 @@ export class PaginateBase extends React.Component<InternalProps> {
             text={i18n.gettext('Previous')}
           />
 
-          {this.visiblePages({ pageCount }).map((page) => (
+          {this.visiblePages().map((page) => (
             <PaginatorLink
               {...linkParams}
               key={`page-${page}`}
@@ -156,7 +143,7 @@ export class PaginateBase extends React.Component<InternalProps> {
         <div className="Paginate-page-number">
           {i18n.sprintf(
             i18n.gettext('Page %(currentPage)s of %(totalPages)s'),
-            { currentPage, totalPages: this.pageCount() },
+            { currentPage, totalPages: pageCount },
           )}
         </div>
       </div>

@@ -20,6 +20,7 @@ export type AddonsByAuthorsState = {|
   countFor: { [string]: number },
   lang: string,
   loadingFor: { [string]: boolean },
+  pageCountFor: { [string]: number },
 |};
 
 export const initialState: AddonsByAuthorsState = {
@@ -31,6 +32,7 @@ export const initialState: AddonsByAuthorsState = {
   // code, and protect against a lang of '' in selectLocalizedContent.
   lang: '',
   loadingFor: {},
+  pageCountFor: {},
 };
 
 // If we change these constants, update the sitemap constants in addons-server
@@ -97,6 +99,7 @@ type LoadAddonsByAuthorsParams = {|
   authorIds: Array<number>,
   count: number,
   forAddonSlug?: string,
+  pageCount: number,
   pageSize: string,
 |};
 
@@ -111,11 +114,13 @@ export const loadAddonsByAuthors = ({
   authorIds,
   count,
   forAddonSlug,
+  pageCount,
   pageSize,
 }: LoadAddonsByAuthorsParams): LoadAddonsByAuthorsAction => {
   invariant(addons, 'A set of add-ons is required.');
   invariant(authorIds, 'A list of authorIds is required.');
   invariant(typeof count === 'number', 'count is required.');
+  invariant(typeof pageCount === 'number', 'pageCount is required.');
   invariant(pageSize, 'pageSize is required.');
 
   return {
@@ -126,6 +131,7 @@ export const loadAddonsByAuthors = ({
       authorIds,
       count,
       forAddonSlug,
+      pageCount,
       pageSize,
     },
   };
@@ -159,6 +165,18 @@ export const getCountForAuthorIds = (
 ): null | number => {
   return (
     addonsByAuthorsState.countFor[
+      joinAuthorIdsAndAddonType(authorIds, addonType)
+    ] || null
+  );
+};
+
+export const getPageCountForAuthorIds = (
+  addonsByAuthorsState: AddonsByAuthorsState,
+  authorIds: Array<number>,
+  addonType?: string,
+): null | number => {
+  return (
+    addonsByAuthorsState.pageCountFor[
       joinAuthorIdsAndAddonType(authorIds, addonType)
     ] || null
   );
@@ -275,8 +293,15 @@ const reducer = (
     case LOAD_ADDONS_BY_AUTHORS: {
       const newState = deepcopy(state);
 
-      const { addonType, addons, authorIds, count, forAddonSlug, pageSize } =
-        action.payload;
+      const {
+        addonType,
+        addons,
+        authorIds,
+        count,
+        forAddonSlug,
+        pageCount,
+        pageSize,
+      } = action.payload;
 
       if (forAddonSlug) {
         newState.byAddonSlug = {
@@ -294,6 +319,7 @@ const reducer = (
 
       newState.countFor[authorIdsWithAddonType] = count;
       newState.loadingFor[authorIdsWithAddonType] = false;
+      newState.pageCountFor[authorIdsWithAddonType] = pageCount;
 
       const internalAddons = addons.map((addon) =>
         createInternalAddon(addon, state.lang),

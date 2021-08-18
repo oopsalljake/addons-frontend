@@ -432,13 +432,12 @@ export class CollectionBase extends React.Component<InternalProps> {
       (collection && collection.addons) || [];
 
     const paginator =
-      collection &&
-      collection.pageSize &&
-      collection.numberOfAddons > Number(collection.pageSize) ? (
+      collection && collection.pageCount && collection.pageCount > 1 ? (
         <Paginate
           LinkComponent={Link}
           count={collection.numberOfAddons}
           currentPage={filters.page}
+          pageCount={collection.pageCount}
           pathname={
             editing
               ? collectionEditUrl({ collection })

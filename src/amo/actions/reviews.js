@@ -339,6 +339,7 @@ export function fetchUserReviews({
 }
 
 type SetUserReviewsParams = {|
+  pageCount: number,
   pageSize: string,
   reviewCount: number,
   reviews: Array<ExternalReviewType>,
@@ -351,11 +352,13 @@ export type SetUserReviewsAction = {|
 |};
 
 export const setUserReviews = ({
+  pageCount,
   pageSize,
   reviewCount,
   reviews,
   userId,
 }: SetUserReviewsParams): SetUserReviewsAction => {
+  invariant(typeof pageCount === 'number', 'pageCount is required');
   invariant(pageSize, 'pageSize is required');
   invariant(typeof reviewCount === 'number', 'reviewCount is required');
   invariant(
@@ -367,6 +370,7 @@ export const setUserReviews = ({
   return {
     type: SET_USER_REVIEWS,
     payload: {
+      pageCount,
       pageSize,
       reviewCount,
       reviews,
@@ -392,6 +396,7 @@ export const setInternalReview = (
 type SetAddonReviewsParams = {|
   addonSlug: string,
   page: string,
+  pageCount: number,
   pageSize: string,
   reviewCount: number,
   reviews: Array<ExternalReviewType>,
@@ -406,6 +411,7 @@ export type SetAddonReviewsAction = {|
 export const setAddonReviews = ({
   addonSlug,
   page,
+  pageCount,
   pageSize,
   reviewCount,
   reviews,
@@ -413,6 +419,7 @@ export const setAddonReviews = ({
 }: SetAddonReviewsParams): SetAddonReviewsAction => {
   invariant(addonSlug, 'addonSlug is required');
   invariant(page, 'page is required');
+  invariant(typeof pageCount === 'number', 'pageCount is required');
   invariant(pageSize, 'pageSize is required');
   invariant(typeof reviewCount === 'number', 'reviewCount is required');
   invariant(Array.isArray(reviews), 'reviews is required and must be an array');
@@ -423,6 +430,7 @@ export const setAddonReviews = ({
     payload: {
       addonSlug,
       page,
+      pageCount,
       pageSize,
       reviewCount,
       reviews,

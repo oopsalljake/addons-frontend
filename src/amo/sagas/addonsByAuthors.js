@@ -46,7 +46,7 @@ export function* fetchAddonsByAuthors({
     };
     const response = yield call(searchApi, params);
 
-    const { count, results } = response;
+    const { count, page_count: pageCount, results } = response;
 
     yield put(
       loadAddonsByAuthors({
@@ -55,6 +55,7 @@ export function* fetchAddonsByAuthors({
         authorIds,
         count,
         forAddonSlug,
+        pageCount,
         pageSize,
       }),
     );

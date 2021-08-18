@@ -339,6 +339,7 @@ export const allPages = async (
   let results = [];
   let nextURL;
   let count = 0;
+  let pageCount = 0;
   let pageSize = 0;
 
   for (let page = 1; page <= pageLimit; page++) {
@@ -346,6 +347,9 @@ export const allPages = async (
     if (!count) {
       // Every response page returns a count for all results.
       count = response.count;
+    }
+    if (!pageCount) {
+      pageCount = response.page_count;
     }
     if (!pageSize) {
       pageSize = response.page_size;
@@ -356,7 +360,7 @@ export const allPages = async (
       nextURL = response.next;
       log.debug(`Fetching next page "${nextURL}"`);
     } else {
-      return { count, page_size: pageSize, results };
+      return { count, page_count: pageCount, page_size: pageSize, results };
     }
   }
 

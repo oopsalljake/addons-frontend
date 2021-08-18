@@ -73,6 +73,7 @@ export type CollectionType = {
   lastUpdatedDate: string,
   name: string,
   numberOfAddons: number,
+  pageCount: number | null,
   pageSize: string | null,
   slug: string,
 };
@@ -274,6 +275,7 @@ export type ExternalCollectionDetail = {|
 export type CollectionAddonsListResponse = {|
   count: number,
   next: string,
+  page_count: number,
   page_size: string,
   previous: string,
   results: ExternalCollectionAddons,
@@ -856,6 +858,7 @@ export const createInternalCollection = ({
   lastUpdatedDate: detail.modified,
   name: selectLocalizedContent(detail.name, lang) || '',
   numberOfAddons: addonsResponse ? addonsResponse.count : detail.addon_count,
+  pageCount: addonsResponse ? addonsResponse.page_count : null,
   pageSize: addonsResponse ? addonsResponse.page_size : null,
   slug: detail.slug,
 });

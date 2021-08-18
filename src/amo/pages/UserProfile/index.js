@@ -72,6 +72,7 @@ type PropsFromState = {|
   currentUser: UserType | null,
   isOwner: boolean | null,
   lang: string,
+  pageCount: number | null,
   pageSize: string | null,
   reviewCount: number | null,
   reviews: Array<UserReviewType> | null,
@@ -212,19 +213,27 @@ export class UserProfileBase extends React.Component<InternalProps> {
   }
 
   renderReviews(): null | React.Node {
-    const { location, i18n, isOwner, pageSize, reviews, reviewCount } =
-      this.props;
+    const {
+      location,
+      i18n,
+      isOwner,
+      pageCount,
+      pageSize,
+      reviews,
+      reviewCount,
+    } = this.props;
 
     if (!isOwner || !reviews || reviews.length < 1) {
       return null;
     }
 
     const paginator =
-      reviewCount && pageSize && reviewCount > Number(pageSize) ? (
+      reviewCount && pageCount && pageCount > 1 ? (
         <Paginate
           LinkComponent={Link}
           count={reviewCount}
           currentPage={this.getReviewsPage(location)}
+          pageCount={pageCount}
           pathname={this.getURL()}
           perPage={Number(pageSize)}
           queryParams={location.query}
@@ -518,6 +527,7 @@ function mapStateToProps(state: AppState, ownProps: Props): PropsFromState {
     currentUser,
     isOwner,
     lang,
+    pageCount: reviews ? reviews.pageCount : null,
     pageSize: reviews ? reviews.pageSize : null,
     reviewCount: reviews ? reviews.reviewCount : null,
     reviews: reviews ? reviews.reviews : null,

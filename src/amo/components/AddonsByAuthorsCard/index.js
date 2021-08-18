@@ -15,6 +15,7 @@ import {
   getAddonsForAuthorIds,
   getCountForAuthorIds,
   getLoadingForAuthorIds,
+  getPageCountForAuthorIds,
 } from 'amo/reducers/addonsByAuthors';
 import Paginate from 'amo/components/Paginate';
 import {
@@ -62,6 +63,7 @@ type PropsFromState = {|
   addons: Array<AddonType> | null,
   count: number | null,
   loading: boolean | null,
+  pageCount: number | null,
 |};
 
 type InternalProps = {|
@@ -345,7 +347,7 @@ export class AddonsByAuthorsCardBase extends React.Component<InternalProps> {
     let paginator = null;
 
     if (paginate) {
-      const { count, location, pageParam, pathname } = this.props;
+      const { count, location, pageCount, pageParam, pathname } = this.props;
 
       invariant(pathname, 'pathname is required when paginate is `true`.');
 
@@ -356,11 +358,12 @@ export class AddonsByAuthorsCardBase extends React.Component<InternalProps> {
       });
 
       paginator =
-        count && count > numberOfAddons ? (
+        count && pageCount && pageCount > 1 ? (
           <Paginate
             LinkComponent={Link}
             count={count}
             currentPage={currentPage}
+            pageCount={pageCount}
             pageParam={pageParam}
             pathname={pathname}
             perPage={numberOfAddons}
@@ -411,10 +414,15 @@ const mapStateToProps = (state: AppState, ownProps: Props): PropsFromState => {
     ? getCountForAuthorIds(state.addonsByAuthors, authorIds, addonType)
     : 0;
 
+  const pageCount = authorIds
+    ? getPageCountForAuthorIds(state.addonsByAuthors, authorIds, addonType)
+    : 0;
+
   return {
     addons,
     count,
     loading,
+    pageCount,
   };
 };
 

@@ -77,6 +77,7 @@ type PropsFromState = {|
   checkingIfSiteUserCanReply: boolean,
   clientApp: string,
   lang: string,
+  pageCount: number | null,
   pageSize: string | null,
   reviewCount: number | null,
   reviews: ?Array<UserReviewType>,
@@ -261,6 +262,7 @@ export class AddonReviewListBase extends React.Component<InternalProps> {
       match: {
         params: { reviewId },
       },
+      pageCount,
       pageSize,
       reviewCount,
       reviews,
@@ -312,11 +314,12 @@ export class AddonReviewListBase extends React.Component<InternalProps> {
       : Array(placeholderCount).fill(null);
 
     const paginator =
-      addon && reviewCount && pageSize && reviewCount > Number(pageSize) ? (
+      addon && reviewCount && pageCount && pageCount > 1 ? (
         <Paginate
           LinkComponent={Link}
           count={reviewCount}
           currentPage={getCurrentPage(location)}
+          pageCount={pageCount}
           pathname={reviewListURL({
             addonSlug: addon.slug,
             score: location.query.score,
@@ -420,6 +423,7 @@ function mapStateToProps(state: AppState, ownProps: Props): PropsFromState {
     checkingIfSiteUserCanReply,
     clientApp: state.api.clientApp,
     lang: state.api.lang,
+    pageCount: reviewData ? reviewData.pageCount : null,
     pageSize: reviewData ? reviewData.pageSize : null,
     reviewCount: reviewData ? reviewData.reviewCount : null,
     reviews:

@@ -97,6 +97,7 @@ type ReviewsById = {
 };
 
 type StoredReviewsData = {|
+  pageCount: number,
   pageSize: string,
   reviewCount: number,
   reviews: Array<number>,
@@ -308,6 +309,7 @@ export const getReviewsByUserId = (
 
   return storedReviewsData
     ? {
+        pageCount: storedReviewsData.pageCount,
         pageSize: storedReviewsData.pageSize,
         reviewCount: storedReviewsData.reviewCount,
         reviews: expandReviewObjects({
